@@ -44,6 +44,7 @@ class Speech2TextDataset(Dataset):
         """
         Labels to ids
         """
+        self.text_list = [self.preprocess_text(txt) for txt in self.text_list]
         text_ids = []
         for txt in self.text_list:
             with self.processor.as_target_processor():
