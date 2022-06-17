@@ -119,9 +119,11 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
                 print("-"*30)
                 print(f"Step {global_step}")
                 print(f"Val Loss = {val_loss} and Val Wer = {val_wer_dict['wer_greedy']}")
+                save_path = os.path.join(checkpoint_folder,f"model_epoch{nepoch}_step{step}.pt")
                 save_model(model=model, save_folder=checkpoint_folder, nepoch=i+1, step=global_step)
                 # save_model()
                 training_stats.append({"step":global_step,
+                                       "checkpoint": save_path,
                                        "trainloss":total_train_loss/global_step,
                                        "valloss":val_loss,
                                        "valwer":val_wer_dict['wer_greedy']})
