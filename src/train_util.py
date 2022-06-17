@@ -27,7 +27,8 @@ def init_model(device='cuda', processor = None):
     return model
 
 def save_model(model, save_folder, nepoch=0, step=0):
-    torch.save(model.state_dict(), os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
+    model.save_pretrained(save_directory=os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
+    # torch.save(model.state_dict(), os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
 
 def load_model(model, save_checkpoint):
     model.load_state_dict(torch.load(save_checkpoint))
