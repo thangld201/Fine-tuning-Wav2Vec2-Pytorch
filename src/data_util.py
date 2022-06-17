@@ -11,7 +11,7 @@ def get_duration(filename):
     return librosa.get_duration(y=y,sr=16000)
 
 class Speech2TextDataset(Dataset):
-    def __init__(self, audio_list_path: List[str], text_list: List = None, max_duration: int = None,
+    def __init__(self, audio_list_path: List[str], text_list: List[str] = None, max_duration: int = None,
                  min_duration: int = None, processor: Wav2Vec2Processor = None):
         self.audio_list_path = audio_list_path
         self.text_list = text_list
