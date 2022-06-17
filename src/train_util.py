@@ -27,10 +27,12 @@ def init_model(device='cuda', processor = None):
     return model
 
 def save_model(model, save_folder, nepoch=0, step=0):
-    model.save_pretrained(save_directory=os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
-    # torch.save(model.state_dict(), os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
+    # model.save_pretrained(save_directory=os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pre.pt"))
+    torch.save(model.state_dict(), os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
 
-def load_model(model, save_checkpoint):
+def load_model(model, save_checkpoint, pretrained=False):
+    # if pretrained:
+    #     return model.from_pretrained(save_checkpoint)
     model.load_state_dict(torch.load(save_checkpoint))
 
 def trainloader(train_data, batch_size=32, data_collator=None, num_workers=4):
