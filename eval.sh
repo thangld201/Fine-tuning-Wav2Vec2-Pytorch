@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python3 src/eval_model.py --eval_data_path ./audio_5h --max_workers 2 --chunksize 64 --lm_path "/content/drive/MyDrive/VND Works/Language Models/ModelLarge" --checkpoint_folder /content/checkpoint --eval_result_save_folder /content/checkpoint --batch_size 32
