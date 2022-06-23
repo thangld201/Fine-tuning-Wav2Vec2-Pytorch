@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 from transformers import Wav2Vec2Processor
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
-
+from tqdm.auto import tqdm
 
 def get_duration(filename):
     y, _=librosa.load(filename,sr=16000)
@@ -46,7 +46,7 @@ class Speech2TextDataset(Dataset):
         """
         self.text_list = [self.preprocess_text(txt) for txt in self.text_list]
         text_ids = []
-        for txt in self.text_list:
+        for txt in tqdm(self.text_list,desc='Encode label ids...'):
             with self.processor.as_target_processor():
                 id_txt = self.processor(txt).input_ids
                 text_ids.append(id_txt)
