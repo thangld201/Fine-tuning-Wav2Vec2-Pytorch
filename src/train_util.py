@@ -100,12 +100,13 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
         # start an epoch
         print('='*30)
         print(f"Epoch {i+1} ..")
-        model.train()
+        
         tmp_train_loss = 0
         tmp_val_loss = 0
-
+        model.train()
         # epoch_iterator = tqdm(trainLoader, desc="Iteration", position=0, leave=True)
         for i, batch in enumerate(trainLoader):
+            model.train()
             inputs = {'input_values':batch["input_values"].to("cuda"),
                     'labels':batch["labels"].to("cuda")}
             loss = model(**inputs).loss
