@@ -50,7 +50,8 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
                    checkpoint_folder: str='.',data_collator: DataCollatorCTCWithPadding=None, resume_from_checkpoint: str=None):
 
     model.gradient_checkpointing_enable()
-
+    model=torch.nn.DataParallel(model)
+    model.to("cuda")
     trainLoader = trainloader(train_data,batch_size=batch_size, data_collator=data_collator,num_workers=num_workers)
     valLoader = testloader(validation_data,batch_size=batch_size, data_collator=data_collator,num_workers=num_workers)
 
@@ -93,6 +94,7 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
     model.zero_grad()
     total_train_loss = 0
     training_stats = []
+    scaler = torch.cuda.amp.GradScaler()
     print("Start training ...")
     print()
     pbar = tqdm(total=total_train_step)
@@ -100,18 +102,18 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
         # start an epoch
         print('='*30)
         print(f"Epoch {i+1} ..")
-        model.train()
         tmp_train_loss = 0
         tmp_val_loss = 0
-
+        
         # epoch_iterator = tqdm(trainLoader, desc="Iteration", position=0, leave=True)
         for i, batch in enumerate(trainLoader):
+            model.train()
             inputs = {'input_values':batch["input_values"].to("cuda"),
                     'labels':batch["labels"].to("cuda")}
             loss = model(**inputs).loss
-            loss.backward()
-            tmp_train_loss+=loss.item()
-            total_train_loss+=loss.item()
+            loss.mean().backward()
+            tmp_train_loss+=loss.mean().item()
+            total_train_loss+=loss.mean().item()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
             if scheduler is not None:

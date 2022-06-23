@@ -39,7 +39,7 @@ def eval_model(model,test_data,processor=None,decoder=None,num_processor=4,beam_
                     'labels':batch["labels"].to("cuda")}
             outputs = model(**inputs)
             logits, loss = outputs.logits, outputs.loss
-            total_loss += loss.item()
+            total_loss += loss.mean().item()
 
         batch['labels'][batch['labels'] == -100] = processor.tokenizer.pad_token_id
         batch["text"] = processor.batch_decode(batch["labels"], group_tokens=False)
