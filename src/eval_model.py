@@ -30,8 +30,11 @@ if __name__=='__main__':
     max_duration = 1e9
 
     model = init_model("cuda")
+    model=torch.nn.DataParallel(model)
+    model.to("cuda")
     processor = init_processor()
     print("Finish loading base model...")
+    
     audio_list, text_list = get_audio_txt(args.eval_data_path,
                                           min_duration=min_duration,
                                           max_duration = max_duration, 
@@ -84,12 +87,3 @@ if __name__=='__main__':
     print()
     print()
     print("Finish Evaluation !")
-
-
-
-
-
-
-
-
-
