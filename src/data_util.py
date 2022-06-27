@@ -21,7 +21,7 @@ class Speech2TextDataset(Dataset):
         self.min_duration = min_duration
         self.max_duration = max_duration
         assert len(self.audio_list_path)==len(self.text_list), "Number of audios and texts are inconsistent!"
-        # self.recheck_data()
+        self.recheck_data()
         if self.text_list is not None:
             self.process_text()
 
