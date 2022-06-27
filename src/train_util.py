@@ -27,8 +27,11 @@ def init_model(device='cuda', processor = None):
     return model
 
 def save_model(model, save_folder, nepoch=0, step=0):
+    """
+    To save DataParallel model, use model.module.state_dict()
+    """
     # model.save_pretrained(save_directory=os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pre.pt"))
-    torch.save(model.state_dict(), os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
+    torch.save(model.module.state_dict(), os.path.join(save_folder,f"model_epoch{nepoch}_step{step}.pt"))
 
 def load_model(model, save_checkpoint, pretrained=False):
     # if pretrained:
@@ -98,10 +101,10 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
     print("Start training ...")
     print()
     pbar = tqdm(total=total_train_step)
-    for i in range(nepochs):
+    for epc in range(nepochs):
         # start an epoch
         print('='*30)
-        print(f"Epoch {i+1} ..")
+        print(f"Epoch {epc+1} ..")
         tmp_train_loss = 0
         tmp_val_loss = 0
         
@@ -124,8 +127,8 @@ def train_n_epoch(model, train_data, batch_size=32,nepochs=10, num_workers=4,
                 print("-"*30)
                 print(f"Step {global_step}")
                 print(f"Val Loss = {val_loss} and Val Wer = {val_wer_dict['wer_greedy']}")
-                save_path = os.path.join(checkpoint_folder,f"model_epoch{i+1}_step{global_step}.pt")
-                save_model(model=model, save_folder=checkpoint_folder, nepoch=i+1, step=global_step)
+                save_path = os.path.join(checkpoint_folder,f"model_epoch{epc+1}_step{global_step}.pt")
+                save_model(model=model, save_folder=checkpoint_folder, nepoch=epc+1, step=global_step)
                 # save_model()
                 training_stats.append({"step":global_step,
                                        "checkpoint": save_path,
